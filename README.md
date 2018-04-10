@@ -1,6 +1,6 @@
 # A/Sync Postgres JSONB ORM
 
-A super-simple ORM for Postgres / JSONB, using HikariCP underneath. 
+A super-simple ORM for Postgres / JSONB, using HikariCP underneath. Supports both sync / async usage. 
 
 Note: I make no guarantees about it being perfectly thread-safe or anything. Use at your own risk.
 
@@ -22,6 +22,9 @@ and then run `mvn test`.
 
 ## Usage
 
+Get it on JitPack: https://jitpack.io/#queer/async-postgres-jsonb-orm
+
+Example code:
 ```Java
 // A class you could save / load
 @Table("data_table") // Save/load with a table named `data_table`
