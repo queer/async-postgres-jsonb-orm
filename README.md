@@ -4,6 +4,10 @@ A super-simple ORM for Postgres / JSONB, using HikariCP underneath.
 
 Note: I make no guarantees about it being perfectly thread-safe or anything. Use at your own risk.
 
+This library will automatically create tables and indexes for you based off of the values of the entity class annotations. 
+This may have performance implications, so it's probably a good idea to do initial class mapping once at the start of your 
+application to get that out of the way. 
+
 ## Building
 
 Just run `mvn clean package`.
