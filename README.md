@@ -18,7 +18,6 @@ and then run `mvn test`.
 
 ## Usage
 
-Create a new `PgStore` instance:
 ```Java
 // A class you could save / load
 @Table("data_table") // Save/load with a table named `data_table`
