@@ -1,4 +1,4 @@
-# Postgres JSONB ORM
+# A/Sync Postgres JSONB ORM
 
 A super-simple ORM for Postgres / JSONB, using HikariCP underneath. 
 
