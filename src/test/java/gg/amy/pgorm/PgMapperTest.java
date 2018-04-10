@@ -82,16 +82,25 @@ public class PgMapperTest {
     
     @Test(expected = IllegalStateException.class)
     public void noPrimaryKeyThrowsException() {
+        if(!canTest()) {
+            return;
+        }
         store.mapSync(DataClassNoPk.class);
     }
     
     @Test(expected = IllegalStateException.class)
     public void noTableThrowsException() {
+        if(!canTest()) {
+            return;
+        }
         store.mapSync(DataClassNoTable.class);
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void invalidSqlPk() {
+        if(!canTest()) {
+            return;
+        }
         store.mapSync(DataClassBadPkType.class);
     }
     
