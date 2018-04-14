@@ -140,7 +140,7 @@ public class PgStore {
     }
     
     public void sql(final String sql) {
-        logger.info("Running statement: {}", sql);
+        logger.debug("Running statement: {}", sql);
         sql(sql, PreparedStatement::execute);
     }
     
