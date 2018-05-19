@@ -45,11 +45,11 @@ public class PgStore {
     private final Map<Class<?>, PgMapper<?>> syncMappers = new ConcurrentHashMap<>();
     private final Map<Class<?>, AsyncPgMapper<?>> asyncMappers = new ConcurrentHashMap<>();
     private final HikariConfig config;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     @Getter(AccessLevel.PACKAGE)
     private HikariDataSource hikari;
     @Getter
     private boolean connected;
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     
     public PgStore(final String url, final String user, final String pass) {
         this(buildConfig(url, user, pass));
@@ -89,6 +89,14 @@ public class PgStore {
         }
         hikari.close();
         connected = false;
+    }
+    
+    public <T> boolean isMappedSync(final Class<T> c) {
+        return syncMappers.containsKey(c);
+    }
+    
+    public <T> boolean isMappedAsync(final Class<T> c) {
+        return asyncMappers.containsKey(c);
     }
     
     public <T> PgMapper<T> mapSync(final Class<T> c) {
