@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -107,6 +108,13 @@ public class PgMapper<T> {
             final ResultSet resultSet = c.executeQuery();
             if(resultSet.isBeforeFirst()) {
                 resultSet.next();
+                try {
+                    result.setValue(loadFromResultSet(resultSet));
+                } catch(final IllegalStateException ignored) {
+                    // Optional API says this will return Optional.empty()
+                    result.setValue(null);
+                }
+                /*
                 final String json = resultSet.getString("data");
                 try {
                     final T loadedEntity = MAPPER.readValue(json, type);
@@ -114,9 +122,25 @@ public class PgMapper<T> {
                 } catch(final IOException e) {
                     logger.error("Couldn't load entity {} from JSON {}: {}", type.getName(), json, e);
                 }
+                */
             }
         });
         return result.value;
+    }
+    
+    public T loadFromResultSet(final ResultSet resultSet) {
+        try {
+            final String json = resultSet.getString("data");
+            try {
+                return MAPPER.readValue(json, type);
+            } catch(final IOException e) {
+                logger.error("Couldn't load entity {} from JSON {}: {}", type.getName(), json, e);
+                throw new IllegalStateException("Couldn't load entity " + type.getName() + " from JSON " + json, e);
+            }
+        } catch(final SQLException e) {
+            logger.error("Couldn't load entity {} from JSON: {}", type.getName(), e);
+            throw new IllegalStateException("Couldn't load entity " + type.getName(), e);
+        }
     }
     
     private String typeToSqlType(final Class<?> type) {
