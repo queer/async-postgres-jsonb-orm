@@ -100,7 +100,7 @@ public class Example {
 
 ## Things to remember
 
-- The mapper build BTREE indexes by default. In the future, there might be a way to set an alternative.
+- The mapper build `GIN` indexes by default. You can change this with the `index` option on `@Table`.
 
 - The `AsyncPgMapper` uses `Executors.newCachedThreadPool()` by default. In the future, there might be a way to set an 
   alternative.
