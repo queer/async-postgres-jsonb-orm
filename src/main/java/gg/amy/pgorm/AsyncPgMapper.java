@@ -9,6 +9,7 @@ import java.util.concurrent.Future;
  * @author amy
  * @since 4/10/18.
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class AsyncPgMapper<T> {
     private final PgMapper<T> mapper;
     
@@ -19,14 +20,14 @@ public class AsyncPgMapper<T> {
         this.mapper = mapper;
     }
     
-    public Future<Void> save(T entity) {
+    public Future<Void> save(final T entity) {
         return POOL.submit(() -> {
             mapper.save(entity);
             return null;
         });
     }
     
-    public Future<Optional<T>> load(Object pk) {
+    public Future<Optional<T>> load(final Object pk) {
         return POOL.submit(() -> mapper.load(pk));
     }
 }

@@ -73,7 +73,7 @@ public class PgMapper<T> {
         if(type.isAnnotationPresent(Index.class)) {
             final Index index = type.getDeclaredAnnotation(Index.class);
             for(final String s : index.value()) {
-                store.sql("CREATE INDEX IF NOT EXISTS idx_" + s + " ON " + table.value() + " USING BTREE ((data->>'" + s + "'));");
+                store.sql("CREATE INDEX IF NOT EXISTS idx_" + s + " ON " + table.value() + " USING " + table.index() + " ((data->>'" + s + "'));");
                 logger.info("Created index idx_{} on {} for entity class {}.", s, table.value(), type.getName());
             }
         }
@@ -114,15 +114,6 @@ public class PgMapper<T> {
                     // Optional API says this will return Optional.empty()
                     result.setValue(null);
                 }
-                /*
-                final String json = resultSet.getString("data");
-                try {
-                    final T loadedEntity = MAPPER.readValue(json, type);
-                    result.setValue(loadedEntity);
-                } catch(final IOException e) {
-                    logger.error("Couldn't load entity {} from JSON {}: {}", type.getName(), json, e);
-                }
-                */
             }
         });
         return result.value;
