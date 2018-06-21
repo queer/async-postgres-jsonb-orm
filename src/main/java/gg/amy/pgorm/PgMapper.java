@@ -80,7 +80,8 @@ public class PgMapper<T> {
             }
         }
         // Make base GIN index
-        store.sql("CREATE INDEX IF NOT EXISTS idx_gin_data ON " + table.value() + " USING GIN (data);");
+        final String dataGinIdx = "idx_gin_" + table.value() + "_data";
+        store.sql("CREATE INDEX IF NOT EXISTS " + dataGinIdx + " ON " + table.value() + " USING GIN (data);");
         logger.info("Created index idx_gin_data on {} for entity class {}.", table.value(), type.getName());
         if(type.isAnnotationPresent(GIndex.class)) {
             final GIndex gin = type.getDeclaredAnnotation(GIndex.class);
