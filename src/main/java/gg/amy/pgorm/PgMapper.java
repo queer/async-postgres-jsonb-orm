@@ -75,7 +75,7 @@ public class PgMapper<T> {
             final BtreeIndex btreeIndex = type.getDeclaredAnnotation(BtreeIndex.class);
             for(final String s : btreeIndex.value()) {
                 final String idx = "idx_btree_" + table.value() + '_' + s;
-                store.sql("CREATE INDEX IF NOT EXISTS " + idx + " ON " + table.value() + " USING BTREE ((data->>'" + s + "'));");
+                store.sql("CREATE INDEX IF NOT EXISTS " + idx + " ON " + table.value() + " USING BTREE ((data->'" + s + "'));");
                 logger.info("Created index {} on {} for entity class {}.", idx, table.value(), type.getName());
             }
         }
