@@ -20,8 +20,7 @@ import java.lang.annotation.Target;
  * </pre>
  * where the primary key is the field annotated with {@link PrimaryKey}.
  * Indexes over the JSONB data will be generated based on the values passed to
- * the {@link Index} annotation. The index type is determined for the entire
- * table by {@link #index()}. Default is {@code BTREE}.
+ * the {@link BtreeIndex} or {@link GIndex} annotations.
  *
  * @author amy
  * @since 4/10/18.
@@ -30,6 +29,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
     String value();
-    
-    String index() default "BTREE";
 }

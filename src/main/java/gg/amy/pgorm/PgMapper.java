@@ -2,7 +2,8 @@ package gg.amy.pgorm;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gg.amy.pgorm.annotations.Index;
+import gg.amy.pgorm.annotations.BtreeIndex;
+import gg.amy.pgorm.annotations.GIndex;
 import gg.amy.pgorm.annotations.PrimaryKey;
 import gg.amy.pgorm.annotations.Table;
 import lombok.Getter;
@@ -70,11 +71,21 @@ public class PgMapper<T> {
                 ");");
         logger.info("Created table {} for entity class {}.", table.value(), type.getName());
         // Create the indexes
-        if(type.isAnnotationPresent(Index.class)) {
-            final Index index = type.getDeclaredAnnotation(Index.class);
-            for(final String s : index.value()) {
-                store.sql("CREATE INDEX IF NOT EXISTS idx_" + s + " ON " + table.value() + " USING " + table.index() + " ((data->>'" + s + "'));");
-                logger.info("Created index idx_{} on {} for entity class {}.", s, table.value(), type.getName());
+        if(type.isAnnotationPresent(BtreeIndex.class)) {
+            final BtreeIndex btreeIndex = type.getDeclaredAnnotation(BtreeIndex.class);
+            for(final String s : btreeIndex.value()) {
+                store.sql("CREATE INDEX IF NOT EXISTS idx_btree_" + s + " ON " + table.value() + " USING BTREE ((data->>'" + s + "'));");
+                logger.info("Created index idx_btree_{} on {} for entity class {}.", s, table.value(), type.getName());
+            }
+        }
+        // Make base GIN index
+        store.sql("CREATE INDEX IF NOT EXISTS idx_gin_data ON " + table.value() + " USING GIN ((data));");
+        logger.info("Created index idx_gin_data on {} for entity class {}.", table.value(), type.getName());
+        if(type.isAnnotationPresent(GIndex.class)) {
+            final GIndex gin = type.getDeclaredAnnotation(GIndex.class);
+            for(final String s : gin.value()) {
+                store.sql("CREATE INDEX IF NOT EXISTS idx_gin_" + s + " ON " + table.value() + " USING GIN ((data->'" + s + "'));");
+                logger.info("Created index idx_gin_{} on {} for entity class {}.", s, table.value(), type.getName());
             }
         }
     }

@@ -14,6 +14,6 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Index {
+public @interface BtreeIndex {
     String[] value() default {};
 }

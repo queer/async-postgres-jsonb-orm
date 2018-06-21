@@ -1,6 +1,6 @@
 package gg.amy.pgorm;
 
-import gg.amy.pgorm.annotations.Index;
+import gg.amy.pgorm.annotations.BtreeIndex;
 import gg.amy.pgorm.annotations.PrimaryKey;
 import gg.amy.pgorm.annotations.Table;
 import lombok.EqualsAndHashCode;
@@ -106,7 +106,7 @@ public class PgMapperTest {
     
     @Value
     @Table(TEST_DATA_TABLE)
-    @Index({"name", "something"})
+    @BtreeIndex({"name", "something"})
     @ToString
     @SuppressWarnings("WeakerAccess")
     @EqualsAndHashCode
@@ -134,7 +134,7 @@ public class PgMapperTest {
     
     @Value
     @Table(TEST_DATA_TABLE)
-    @Index({"name", "something"})
+    @BtreeIndex({"name", "something"})
     @ToString
     @SuppressWarnings("WeakerAccess")
     @EqualsAndHashCode
@@ -148,7 +148,7 @@ public class PgMapperTest {
     
     @Value
     @Table(TEST_DATA_TABLE)
-    @Index({"name", "something"})
+    @BtreeIndex({"name", "something"})
     @ToString
     @SuppressWarnings("WeakerAccess")
     @EqualsAndHashCode
