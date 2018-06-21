@@ -74,18 +74,20 @@ public class PgMapper<T> {
         if(type.isAnnotationPresent(BtreeIndex.class)) {
             final BtreeIndex btreeIndex = type.getDeclaredAnnotation(BtreeIndex.class);
             for(final String s : btreeIndex.value()) {
-                store.sql("CREATE INDEX IF NOT EXISTS idx_btree_" + s + " ON " + table.value() + " USING BTREE ((data->>'" + s + "'));");
-                logger.info("Created index idx_btree_{} on {} for entity class {}.", s, table.value(), type.getName());
+                final String idx = "idx_btree_" + table.value() + '_' + s;
+                store.sql("CREATE INDEX IF NOT EXISTS " + idx + " ON " + table.value() + " USING BTREE ((data->>'" + s + "'));");
+                logger.info("Created index {} on {} for entity class {}.", idx, table.value(), type.getName());
             }
         }
         // Make base GIN index
-        store.sql("CREATE INDEX IF NOT EXISTS idx_gin_data ON " + table.value() + " USING GIN ((data));");
+        store.sql("CREATE INDEX IF NOT EXISTS idx_gin_data ON " + table.value() + " USING GIN (data);");
         logger.info("Created index idx_gin_data on {} for entity class {}.", table.value(), type.getName());
         if(type.isAnnotationPresent(GIndex.class)) {
             final GIndex gin = type.getDeclaredAnnotation(GIndex.class);
             for(final String s : gin.value()) {
-                store.sql("CREATE INDEX IF NOT EXISTS idx_gin_" + s + " ON " + table.value() + " USING GIN ((data->'" + s + "'));");
-                logger.info("Created index idx_gin_{} on {} for entity class {}.", s, table.value(), type.getName());
+                final String idx = "idx_gin_" + table.value() + '_' + s;
+                store.sql("CREATE INDEX IF NOT EXISTS " + idx + " ON " + table.value() + " USING GIN ((data->'" + s + "'));");
+                logger.info("Created index {} on {} for entity class {}.", idx, table.value(), type.getName());
             }
         }
     }
