@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -124,13 +126,56 @@ public class PgMapper<T> {
                 resultSet.next();
                 try {
                     result.setValue(loadFromResultSet(resultSet));
-                } catch(final IllegalStateException ignored) {
+                } catch(final IllegalStateException e) {
+                    e.printStackTrace();
                     // Optional API says this will return Optional.empty()
                     result.setValue(null);
                 }
             }
         });
         return result.value;
+    }
+    
+    /**
+     * This is a slightly-weird thing, but it makes sense given the kind of
+     * use-case I have. <p/>
+     * Suppose you have many documents like this:
+     * <pre>
+     * {
+     *     "id": 123456789,
+     *     "data": "henlo world",
+     *     "type": "type.whatever"
+     * }
+     * </pre>
+     * and you want to select all documents with type {@code type.whatever}.
+     * This can't be done nicely without writing SQL statements directly in
+     * your application, which is ugly in my opinion. To solve this, there has
+     * to be a method that allows loading many objects by a key's value in the
+     * JSONB data that gets stored, hence why this method exists.
+     *
+     * @param subKey     The subkey to query on. Ex. {@code data->'type'}.
+     * @param subKeyData The subkey data to search for. Ex.
+     *                   {@code type.whatever}.
+     *
+     * @return A list of {@code <T>}s that has the given value for the given
+     * subkey.
+     */
+    public List<T> loadManyBySubkey(final String subKey, final String subKeyData) {
+        final List<T> data = new ArrayList<>();
+        store.sql("SELECT * FROM " + table.value() + " WHERE " + subKey + " = ?;", c -> {
+            c.setObject(1, subKeyData);
+            final ResultSet resultSet = c.executeQuery();
+            if(resultSet.isBeforeFirst()) {
+                while(resultSet.next()) {
+                    try {
+                        data.add(loadFromResultSet(resultSet));
+                    } catch(final IllegalStateException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        return data;
     }
     
     public T loadFromResultSet(final ResultSet resultSet) {
