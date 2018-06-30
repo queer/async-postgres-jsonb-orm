@@ -205,6 +205,14 @@ public class PgMapper<T> {
         }
     }
     
+    public String getTableName() {
+        return table.value();
+    }
+    
+    public String getPrimaryKeyName() {
+        return primaryKey.value();
+    }
+    
     // Ugly hack to allow bringing an optional out of a lambda
     private final class OptionalHolder {
         // This is intentionally done. . _.
