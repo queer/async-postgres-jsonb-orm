@@ -75,6 +75,12 @@ public class PgStore {
                 System.getenv("POSTGRES_PASSWORD"));
     }
     
+    public static PgStore fromDsn(final String dsn) {
+        final HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(dsn);
+        return new PgStore(config);
+    }
+    
     public void connect() {
         if(connected) {
             return;
