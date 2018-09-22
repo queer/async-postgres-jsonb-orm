@@ -1,9 +1,9 @@
 package gg.amy.pgorm;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 /**
  * @author amy
@@ -11,23 +11,22 @@ import java.util.concurrent.Future;
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class AsyncPgMapper<T> {
-    private final PgMapper<T> mapper;
-    
     // TODO: Provide a way to customize this
     private static final ExecutorService POOL = Executors.newCachedThreadPool();
+    private final PgMapper<T> mapper;
     
     public AsyncPgMapper(final PgMapper<T> mapper) {
         this.mapper = mapper;
     }
     
-    public Future<Void> save(final T entity) {
-        return POOL.submit(() -> {
+    public CompletableFuture<Void> save(final T entity) {
+        return CompletableFuture.supplyAsync(() -> {
             mapper.save(entity);
             return null;
-        });
+        }, POOL);
     }
     
-    public Future<Optional<T>> load(final Object pk) {
-        return POOL.submit(() -> mapper.load(pk));
+    public CompletableFuture<Optional<T>> load(final Object pk) {
+        return CompletableFuture.supplyAsync(() -> mapper.load(pk), POOL);
     }
 }
