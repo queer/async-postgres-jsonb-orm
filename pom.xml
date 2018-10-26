@@ -15,7 +15,6 @@
         <jackson.version>2.9.6</jackson.version>
 
         <maven.plugin.compiler.version>3.7.0</maven.plugin.compiler.version>
-        <maven.plugin.shade.version>3.1.0</maven.plugin.shade.version>
     </properties>
 
     <dependencies>
@@ -171,29 +170,6 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>${maven.plugin.shade.version}</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <artifactSet>
-                                <excludes>
-                                    <exclude>*:*:*:sources:*</exclude>
-                                    <exclude>*:*:*:javadoc:*</exclude>
-                                    <exclude>org.projectlombok:*:*:*:*</exclude>
-                                </excludes>
-                            </artifactSet>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
