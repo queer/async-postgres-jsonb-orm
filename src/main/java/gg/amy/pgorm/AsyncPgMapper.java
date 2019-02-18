@@ -11,8 +11,7 @@ import java.util.concurrent.Executors;
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class AsyncPgMapper<T> {
-    // TODO: Provide a way to customize this
-    private static final ExecutorService POOL = Executors.newCachedThreadPool();
+    private static final ExecutorService POOL = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
     private final PgMapper<T> mapper;
     
     public AsyncPgMapper(final PgMapper<T> mapper) {
