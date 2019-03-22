@@ -165,8 +165,7 @@ public class PgStore {
             try {
                 sql(t);
             } catch(final SQLException e) {
-                System.err.println("BIG FIRE ERROR:");
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
         
