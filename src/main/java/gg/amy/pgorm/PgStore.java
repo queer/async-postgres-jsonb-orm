@@ -136,8 +136,8 @@ public class PgStore {
         try(final Connection connection = hikari.getConnection()) {
             consumer.accept(connection);
         } catch(final SQLException e) {
-            logger.error("Exception while executing SQL: {}", e);
-            e.printStackTrace();
+            logger.error("Exception while executing SQL:", e);
+            throw new IllegalStateException(e);
         }
     }
     
@@ -147,8 +147,8 @@ public class PgStore {
                 logger.debug("Accepting consumer to prepare statement: {}", sql);
                 consumer.accept(statement);
             } catch(final SQLException e) {
-                logger.error("Exception while executing SQL statement '{}': {}", sql, e);
-                e.printStackTrace();
+                logger.error("Exception while executing SQL statement '{}':", sql, e);
+                throw new IllegalStateException(e);
             }
         });
     }
